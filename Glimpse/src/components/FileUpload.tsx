@@ -21,7 +21,7 @@ export const FileUpload: FC<FetchDataProps> = ({ fetchData }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/upload",
+        "https://glimpse2.onrender.com/upload",
         formData,
         {
           headers: {

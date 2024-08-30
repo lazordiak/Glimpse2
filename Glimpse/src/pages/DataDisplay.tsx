@@ -31,7 +31,7 @@ export const DataDisplay = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/data", {
+      const response = await axios.get("https://glimpse2.onrender.com/data", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

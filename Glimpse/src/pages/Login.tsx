@@ -10,7 +10,7 @@ export const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await axios.post<{ accessToken: string }>(
-      "http://localhost:5000/login",
+      "https://glimpse2.onrender.com/login",
       {
         username,
         password,
