@@ -43,6 +43,7 @@ const authenticateToken = (req, res, next) => {
 
 // Dummy login function to emulate auth.
 app.post("/login", async (req, res) => {
+  console.log("this one is working");
   const { username, password } = req.body;
   const accessToken = jwt.sign({ username: username }, process.env.JWT_SECRET);
   res.json({ accessToken: accessToken });
@@ -52,8 +53,12 @@ app.post("/login", async (req, res) => {
 app.get("/data", authenticateToken, async (req, res) => {
   const { source, interest_level, status } = req.query;
 
+  console.log("ok, data call");
+
   let queryText = "SELECT * FROM glimpse WHERE 1=1";
   const queryParams = [];
+
+  console.log("before all the ifs");
 
   if (source) {
     queryParams.push(source);
@@ -71,9 +76,12 @@ app.get("/data", authenticateToken, async (req, res) => {
   }
 
   try {
+    console.log("in the try");
     const result = await pool.query(queryText, queryParams);
     res.json(result.rows);
+    console.log("after try");
   } catch (error) {
+    console.log(error.message);
     console.error(error.message);
     res.status(500).json({ message: "Failed to retrieve data" });
   }
