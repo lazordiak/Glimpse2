@@ -101,11 +101,15 @@ app.post("/upload", upload.single("csvFile"), (req, res) => {
         status: data["Status"],
         assigned_salesperson: data["Assigned Salesperson"],
       };
+      console.log("converted data");
+      console.log(convertedData);
       results.push(convertedData);
     })
     .on("end", async () => {
       try {
         for (let row of results) {
+          console.log("and the row");
+          console.log(row);
           const queryText = `
           INSERT INTO glimpse (lead_id, lead_name, contact_info, source, interest_level, status, assigned_salesperson)
           VALUES ($1, $2, $3, $4, $5, $6, $7)
