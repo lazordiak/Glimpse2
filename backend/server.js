@@ -11,6 +11,9 @@ require("dotenv").config();
 // This is for processing file uploads
 const upload = multer({ dest: "uploads/" });
 
+console.log("the url");
+console.log(process.env.DATABASE_URL);
+
 /*const corsOptions = {
   origin: "https://glimpse-frontend.onrender.com/", // Replace with your frontend's URL
   optionsSuccessStatus: 200,
