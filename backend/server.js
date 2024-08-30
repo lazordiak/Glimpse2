@@ -11,9 +11,6 @@ require("dotenv").config();
 // This is for processing file uploads
 const upload = multer({ dest: "uploads/" });
 
-console.log("the url");
-console.log(process.env.DB_URL);
-
 /*const corsOptions = {
   origin: "https://glimpse-frontend.onrender.com/", // Replace with your frontend's URL
   optionsSuccessStatus: 200,
@@ -46,7 +43,6 @@ const authenticateToken = (req, res, next) => {
 
 // Dummy login function to emulate auth.
 app.post("/login", async (req, res) => {
-  console.log("this one is working");
   const { username, password } = req.body;
   const accessToken = jwt.sign({ username: username }, process.env.JWT_SECRET);
   res.json({ accessToken: accessToken });
@@ -56,12 +52,8 @@ app.post("/login", async (req, res) => {
 app.get("/data", authenticateToken, async (req, res) => {
   const { source, interest_level, status } = req.query;
 
-  console.log("ok, data call");
-
   let queryText = "SELECT * FROM glimpse WHERE 1=1";
   const queryParams = [];
-
-  console.log("before all the ifs");
 
   if (source) {
     queryParams.push(source);
@@ -132,6 +124,8 @@ app.post("/upload", upload.single("csvFile"), (req, res) => {
           .status(200)
           .json({ message: "File successfully processed and data inserted" });
       } catch (err) {
+        console.log("its an error...");
+        console.log(err);
         console.error(err);
         res.status(500).json({ message: "Failed to insert data" });
       } finally {
