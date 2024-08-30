@@ -81,6 +81,8 @@ app.get("/data", authenticateToken, async (req, res) => {
     res.json(result.rows);
     console.log("after try");
   } catch (error) {
+    console.log("oof, an error");
+    console.log(error);
     console.log(error.message);
     console.error(error.message);
     res.status(500).json({ message: "Failed to retrieve data" });
