@@ -29,7 +29,7 @@ const authenticateToken = (req, res, next) => {
   const token = header && header.split(" ")[1];
   if (token == null) return res.sendStatus(401);
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, "secret", (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;
     next();
@@ -39,46 +39,77 @@ const authenticateToken = (req, res, next) => {
 // Dummy login function to emulate auth.
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const accessToken = jwt.sign(
-    { username: username },
-    process.env.ACCESS_TOKEN_SECRET
-  );
+  const accessToken = jwt.sign({ username: username }, "secret");
   res.json({ accessToken: accessToken });
 });
 
 // This endpoint retrieves all the data in the database.
 app.get("/data", authenticateToken, async (req, res) => {
+  const { source, interest_level, status } = req.query;
+
+  let queryText = "SELECT * FROM glimpse WHERE 1=1";
+  const queryParams = [];
+
+  if (source) {
+    queryParams.push(source);
+    queryText += ` AND source = $${queryParams.length}`;
+  }
+
+  if (interest_level) {
+    queryParams.push(interest_level);
+    queryText += ` AND interest_level = $${queryParams.length}`;
+  }
+
+  if (status) {
+    queryParams.push(status);
+    queryText += ` AND status = $${queryParams.length}`;
+  }
+
   try {
-    const users = await pool.query("SELECT * FROM glimpse");
-    res.json(users.rows);
+    const result = await pool.query(queryText, queryParams);
+    res.json(result.rows);
   } catch (error) {
-    console.log(error);
     console.error(error.message);
+    res.status(500).json({ message: "Failed to retrieve data" });
   }
 });
 
 // This endpoint uploads the CSV file to the database.
 app.post("/upload", upload.single("csvFile"), (req, res) => {
-  console.log(req.file);
-  console.log(req.body);
   const filePath = req.file.path;
   const results = [];
 
   fs.createReadStream(filePath)
     .pipe(csv())
-    .on("data", (data) => results.push(data))
+    .on("data", (data) => {
+      const convertedData = {
+        lead_id: data["Lead ID"],
+        lead_name: data["Lead Name"],
+        contact_info: data["Contact Information"],
+        source: data["Source"],
+        interest_level: data["Interest Level"],
+        status: data["Status"],
+        assigned_salesperson: data["Assigned Salesperson"],
+      };
+      results.push(convertedData);
+    })
     .on("end", async () => {
       try {
-        await pool.connect();
-        const client = await pool.connect();
-
         for (let row of results) {
-          const queryText =
-            "INSERT INTO your_table(column1, column2) VALUES($1, $2)";
-          await client.query(queryText, [row.column1, row.column2]);
+          const queryText = `
+          INSERT INTO glimpse (lead_id, lead_name, contact_info, source, interest_level, status, assigned_salesperson)
+          VALUES ($1, $2, $3, $4, $5, $6, $7)
+        `;
+          await pool.query(queryText, [
+            row.lead_id,
+            row.lead_name,
+            row.contact_info,
+            row.source,
+            row.interest_level,
+            row.status,
+            row.assigned_salesperson,
+          ]);
         }
-
-        client.release();
         res
           .status(200)
           .json({ message: "File successfully processed and data inserted" });
@@ -86,7 +117,7 @@ app.post("/upload", upload.single("csvFile"), (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Failed to insert data" });
       } finally {
-        fs.unlinkSync(filePath);
+        fs.unlinkSync(filePath); // Remove the file after processing
       }
     });
 });

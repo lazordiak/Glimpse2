@@ -1,7 +1,11 @@
 import axios from "axios";
-import { useState } from "react";
+import { FC, useState } from "react";
 
-export const FileUpload = () => {
+interface FetchDataProps {
+  fetchData: () => Promise<void>;
+}
+
+export const FileUpload: FC<FetchDataProps> = ({ fetchData }) => {
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +33,7 @@ export const FileUpload = () => {
 
       if (response.status === 200) {
         console.log("File uploaded successfully");
+        fetchData();
       } else {
         console.error("Error uploading file");
       }

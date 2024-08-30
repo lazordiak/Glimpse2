@@ -25,7 +25,7 @@ export const Login = () => {
     <div>
       <h1>Login</h1>
       <form
-        style={{ display: "flex", flexDirection: "column" }}
+        style={{ display: "flex", flexDirection: "column", gap: "12px" }}
         onSubmit={handleLogin}
       >
         <input

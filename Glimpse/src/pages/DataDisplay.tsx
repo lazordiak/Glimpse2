@@ -27,7 +27,7 @@ const columns: GridColDef[] = [
 ];
 
 export const DataDisplay = () => {
-  const [data, setData] = useState<DataType[]>([]);
+  const [data, setData] = useState<DataType[] | null>(null);
 
   const fetchData = async () => {
     try {
@@ -46,7 +46,7 @@ export const DataDisplay = () => {
     fetchData();
   }, []);
 
-  if (!data || data.length === 0) {
+  if (!data) {
     return <div>Loading...</div>;
   }
 
@@ -57,7 +57,7 @@ export const DataDisplay = () => {
   return (
     <div>
       <h2>File Upload</h2>
-      <FileUpload />
+      <FileUpload fetchData={fetchData} />
       <h2>Data Table</h2>
       <DataGrid
         sx={{ p: 2 }}
