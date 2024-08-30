@@ -12,7 +12,7 @@ require("dotenv").config();
 const upload = multer({ dest: "uploads/" });
 
 console.log("the url");
-console.log(process.env.DATABASE_URL);
+console.log(process.env.DB_URL);
 
 /*const corsOptions = {
   origin: "https://glimpse-frontend.onrender.com/", // Replace with your frontend's URL
@@ -25,7 +25,7 @@ app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DB_URL,
   ssl: {
     rejectUnauthorized: false,
   },
