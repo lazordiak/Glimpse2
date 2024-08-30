@@ -28,7 +28,7 @@ const authenticateToken = (req, res, next) => {
   const token = header && header.split(" ")[1];
   if (token == null) return res.sendStatus(401);
 
-  jwt.verify(token, "secret", (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;
     next();
@@ -38,7 +38,7 @@ const authenticateToken = (req, res, next) => {
 // Dummy login function to emulate auth.
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const accessToken = jwt.sign({ username: username }, "secret");
+  const accessToken = jwt.sign({ username: username }, process.env.JWT_SECRET);
   res.json({ accessToken: accessToken });
 });
 
