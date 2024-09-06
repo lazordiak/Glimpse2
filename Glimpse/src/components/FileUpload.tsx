@@ -56,7 +56,7 @@ export const FileUpload: FC<FetchDataProps> = ({ fetchData }) => {
         accept=".csv"
         id="file-upload"
         onChange={handleFileChange}
-        style={{ display: "none" }} // Hide the default input
+        style={{ display: "none" }}
       />
       <label
         htmlFor="file-upload"
@@ -78,26 +78,28 @@ export const FileUpload: FC<FetchDataProps> = ({ fetchData }) => {
         Choose File
       </label>
       {file && <p>{file.name}</p>}
-      <button
-        onClick={handleUpload}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#28a745",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          transition: "background-color 0.3s",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#218838";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "#28a745";
-        }}
-      >
-        Upload
-      </button>
+      {file && (
+        <button
+          onClick={handleUpload}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#28a745",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            transition: "background-color 0.3s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#218838";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#28a745";
+          }}
+        >
+          Upload
+        </button>
+      )}
     </div>
   );
 };

@@ -12,7 +12,7 @@ require("dotenv").config();
 const upload = multer({ dest: "uploads/" });
 
 /*const corsOptions = {
-  origin: "https://glimpse-frontend.onrender.com/", // Replace with your frontend's URL
+  origin: "https://glimpse-frontend.onrender.com/", 
   optionsSuccessStatus: 200,
 };*/
 
@@ -71,14 +71,9 @@ app.get("/data", authenticateToken, async (req, res) => {
   }
 
   try {
-    console.log("in the try");
     const result = await pool.query(queryText, queryParams);
     res.json(result.rows);
-    console.log("after try");
   } catch (error) {
-    console.log("oof, an error");
-    console.log(error);
-    console.log(error.message);
     console.error(error.message);
     res.status(500).json({ message: "Failed to retrieve data" });
   }
@@ -115,8 +110,6 @@ app.post("/upload", upload.single("csvFile"), (req, res) => {
             row.status,
             row.assigned_salesperson,
           ];
-          console.log("the values");
-          console.log(values);
           const queryText = `
           INSERT INTO glimpse (lead_id, lead_name, contact_info, source, interest_level, status, assigned_salesperson)
           VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -135,12 +128,10 @@ app.post("/upload", upload.single("csvFile"), (req, res) => {
           .status(200)
           .json({ message: "File successfully processed and data inserted" });
       } catch (err) {
-        console.log("its an error...");
-        console.log(err);
         console.error(err);
         res.status(500).json({ message: "Failed to insert data" });
       } finally {
-        fs.unlinkSync(filePath); // Remove the file after processing
+        fs.unlinkSync(filePath);
       }
     });
 });
@@ -150,7 +141,7 @@ app.post("/data", authenticateToken, async (req, res) => {
   try {
     const { name, email } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO users (name, email) VALUES($1, $2) RETURNING *",
+      "INSERT INTO glimpse (name, email) VALUES($1, $2) RETURNING *",
       [name, email]
     );
     res.json(newUser.rows[0]);
@@ -163,7 +154,20 @@ app.post("/data", authenticateToken, async (req, res) => {
 // Just in case we want to build this functionality out in the future.
 app.put("/data/:id", authenticateToken, async (req, res) => {});
 
+// Delete a lead from the database
 app.delete("/data/:id", authenticateToken, async (req, res) => {});
+
+// Delete all leads from the database
+app.delete("/data", authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query("DELETE FROM glimpse");
+
+    res.status(200).json({ message: "All leads deleted successfully" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Error deleting all leads" });
+  }
+});
 
 app.listen(5000, () => {
   console.log("Server has started on port 5000");

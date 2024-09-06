@@ -2,6 +2,7 @@ import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import FileUpload from "../components/FileUpload";
+import { DeleteAllLeadsButton } from "../components/DeleteLeads";
 
 interface DataType {
   lead_id: string;
@@ -46,9 +47,9 @@ export const DataDisplay = () => {
     fetchData();
   }, []);
 
-  if (!data) {
+  /*if (!data) {
     return <div>Loading...</div>;
-  }
+  }*/
 
   const getRowId = (row: DataType) => {
     return row.lead_id;
@@ -58,6 +59,8 @@ export const DataDisplay = () => {
     <div>
       <h2>File Upload</h2>
       <FileUpload fetchData={fetchData} />
+      <h2>Delete Data</h2>
+      <DeleteAllLeadsButton fetchData={fetchData} />
       <h2>Data Table</h2>
       <DataGrid
         sx={{ p: 2 }}
