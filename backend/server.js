@@ -4,6 +4,7 @@ const { Pool } = require("pg");
 const multer = require("multer");
 const csv = require("csv-parser");
 const fs = require("fs");
+const { rateLimit } = require("express-rate-limit");
 
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -17,9 +18,27 @@ const corsOptions = {
 };
 
 const app = express();
-app.use(cors(corsOptions));
-//app.use(cors());
+//app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
+app.use((req, res, next) => {
+  res.setHeader(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains"
+  );
+  next();
+});
+
+const loginLimiter = rateLimit({
+  // How long to remember requests
+  windowMs: 15 * 60 * 1000,
+  // Max number of requests per IP
+  max: 100,
+  message:
+    "Too many login attempts from this IP, please try again after 15 minutes",
+});
+
+app.use("/login", loginLimiter);
 
 const pool = new Pool({
   connectionString: process.env.DB_URL,
@@ -44,7 +63,9 @@ const authenticateToken = (req, res, next) => {
 // Dummy login function to emulate auth.
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const accessToken = jwt.sign({ username: username }, process.env.JWT_SECRET);
+  const accessToken = jwt.sign({ username: username }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
   res.json({ accessToken: accessToken });
 });
 
