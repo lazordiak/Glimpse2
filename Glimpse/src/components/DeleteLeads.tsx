@@ -21,6 +21,7 @@ export const DeleteAllLeadsButton: FC<DeleteAllLeadsProps> = ({
       const response = await axios.delete(
         `https://glimpse2.onrender.com/data`,
         {
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,

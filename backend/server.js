@@ -13,13 +13,16 @@ require("dotenv").config();
 const upload = multer({ dest: "uploads/" });
 
 const corsOptions = {
-  origin: "https://glimpse-frontend.onrender.com/",
+  origin: "https://glimpse-frontend.onrender.com",
   optionsSuccessStatus: 200,
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 const app = express();
-//app.use(cors(corsOptions));
-app.use(cors());
+app.options("*", cors(corsOptions));
+app.use(cors(corsOptions));
+//app.use(cors());
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader(

@@ -24,6 +24,7 @@ export const FileUpload: FC<FetchDataProps> = ({ fetchData }) => {
         "https://glimpse2.onrender.com/upload",
         formData,
         {
+          withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
             "Content-Type": "multipart/form-data",

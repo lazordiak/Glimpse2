@@ -14,7 +14,8 @@ export const Login = () => {
       {
         username,
         password,
-      }
+      },
+      { withCredentials: true }
     );
     localStorage.setItem("token", response.data.accessToken);
     localStorage.setItem("user", username);
