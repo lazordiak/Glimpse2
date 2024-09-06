@@ -18,12 +18,15 @@ export const DeleteAllLeadsButton: FC<DeleteAllLeadsProps> = ({
     }
 
     try {
-      const response = await axios.delete(`https://your-backend-url.com/data`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.delete(
+        `https://glimpse2.onrender.com//data`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
       if (response.status === 200) {
         console.log("Data deleted successfully");

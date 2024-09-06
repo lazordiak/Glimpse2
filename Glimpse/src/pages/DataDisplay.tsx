@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import FileUpload from "../components/FileUpload";
 import { DeleteAllLeadsButton } from "../components/DeleteLeads";
+import { Logout } from "../components/Logout";
 
 interface DataType {
   lead_id: string;
@@ -84,6 +85,8 @@ export const DataDisplay = () => {
         rows={data}
         columns={columns}
       />
+      <h2>Logout</h2>
+      <Logout />
     </div>
   );
 };
