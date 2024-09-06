@@ -29,6 +29,7 @@ const columns: GridColDef[] = [
 
 export const DataDisplay = () => {
   const [data, setData] = useState<DataType[] | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -39,6 +40,9 @@ export const DataDisplay = () => {
       });
       setData(response.data);
     } catch (error) {
+      if (error instanceof Error) {
+        setErrorMsg(error.message);
+      }
       console.log(error);
     }
   };
@@ -47,9 +51,9 @@ export const DataDisplay = () => {
     fetchData();
   }, []);
 
-  /*if (!data) {
+  if (!data) {
     return <div>Loading...</div>;
-  }*/
+  }
 
   const getRowId = (row: DataType) => {
     return row.lead_id;
@@ -57,6 +61,7 @@ export const DataDisplay = () => {
 
   return (
     <div>
+      {errorMsg && <h2>{errorMsg}</h2>}
       <h2>File Upload</h2>
       <FileUpload fetchData={fetchData} />
       <h2>Delete Data</h2>
