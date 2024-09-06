@@ -11,14 +11,14 @@ require("dotenv").config();
 // This is for processing file uploads
 const upload = multer({ dest: "uploads/" });
 
-/*const corsOptions = {
-  origin: "https://glimpse-frontend.onrender.com/", 
+const corsOptions = {
+  origin: "https://glimpse-frontend.onrender.com/",
   optionsSuccessStatus: 200,
-};*/
+};
 
 const app = express();
-//app.use(cors(corsOptions));
-app.use(cors());
+app.use(cors(corsOptions));
+//app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
