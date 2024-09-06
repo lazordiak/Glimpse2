@@ -19,7 +19,7 @@ export const DeleteAllLeadsButton: FC<DeleteAllLeadsProps> = ({
 
     try {
       const response = await axios.delete(
-        `https://glimpse2.onrender.com//data`,
+        `https://glimpse2.onrender.com/data`,
         {
           headers: {
             "Content-Type": "application/json",
