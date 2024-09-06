@@ -117,14 +117,7 @@ app.post("/upload", upload.single("csvFile"), (req, res) => {
           const queryText = `
   INSERT INTO glimpse (lead_id, lead_name, contact_info, source, interest_level, status, assigned_salesperson)
   VALUES ($1, $2, $3, $4, $5, $6, $7)
-  ON CONFLICT (lead_id)
-  DO UPDATE SET
-    lead_name = EXCLUDED.lead_name,
-    contact_info = EXCLUDED.contact_info,
-    source = EXCLUDED.source,
-    interest_level = EXCLUDED.interest_level,
-    status = EXCLUDED.status,
-    assigned_salesperson = EXCLUDED.assigned_salesperson
+  ON CONFLICT (lead_id) DO NOTHING
 `;
 
           await pool.query(queryText, [
