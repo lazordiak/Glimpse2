@@ -66,8 +66,12 @@ export const DataDisplay = () => {
       {errorMsg && <h2>{errorMsg}</h2>}
       <h2>File Upload</h2>
       <FileUpload fetchData={fetchData} />
-      <h2>Delete Data</h2>
-      <DeleteAllLeadsButton fetchData={fetchData} />
+      {data && data.length > 0 && (
+        <>
+          <h2>Delete Data</h2>
+          <DeleteAllLeadsButton fetchData={fetchData} />
+        </>
+      )}
       <h2>Data Table</h2>
       <DataGrid
         sx={{ p: 2 }}
